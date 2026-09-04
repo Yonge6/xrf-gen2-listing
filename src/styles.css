@@ -6398,8 +6398,9 @@ body { color: var(--ink); }
 }
 
 .review-proof {
+  --review-rail-gutter: max(36px, calc((100vw - 1280px) / 2));
   overflow: hidden;
-  padding: 140px max(36px, calc((100vw - 1280px) / 2));
+  padding: 140px var(--review-rail-gutter);
   background: #f5f5f7;
 }
 
@@ -6438,12 +6439,14 @@ body { color: var(--ink); }
 }
 
 .review-proof__rail {
-  width: min(1280px, 100%);
+  width: calc(100% + (2 * var(--review-rail-gutter)));
+  max-width: none;
   display: flex;
   gap: 18px;
-  margin: 0 auto;
-  padding: 0 1px 14px;
+  margin-inline: calc(-1 * var(--review-rail-gutter));
+  padding: 0 var(--review-rail-gutter) 14px;
   overflow-x: auto;
+  scroll-padding-inline: var(--review-rail-gutter);
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }
@@ -6467,7 +6470,7 @@ body { color: var(--ink); }
 }
 
 .review-video-card {
-  flex: 0 0 calc((100% - 36px) / 3);
+  flex: 0 0 min(414px, calc((100vw - (2 * var(--review-rail-gutter)) - 36px) / 3));
   overflow: hidden;
   padding: 0;
   border: 1px solid var(--line);
@@ -7049,7 +7052,8 @@ body { color: var(--ink); }
   }
 
   .review-proof {
-    padding: 88px 18px;
+    --review-rail-gutter: 18px;
+    padding: 88px var(--review-rail-gutter);
   }
 
   .review-proof__header {
