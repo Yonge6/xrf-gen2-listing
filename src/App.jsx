@@ -34,7 +34,8 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { CommercialCapabilities } from "./components/CommercialCapabilities.jsx";
-import { HomeFooter, HomeNavigation, HomePage } from "./Home.jsx";
+import { HomeFooter, HomePage } from "./Home.jsx";
+import { XrfNavigation } from "./XrfNavigation.jsx";
 import { initializeAnalytics, trackEvent } from "./analytics.js";
 import { useAutoplayCarousel } from "./hooks/useAutoplayCarousel.js";
 
@@ -1508,7 +1509,7 @@ export function XrfPage() {
     <div className="site-shell home-global-chrome">
       <div className="page-progress" aria-hidden="true"><span style={{ width: `${scrollProgress}%` }} /></div>
       <a className="skip-link" href="#main">Skip to content</a>
-      <HomeNavigation megaMenuActivation="click" />
+      <XrfNavigation />
 
       <nav className={journeyVisible ? "journey-nav is-visible" : "journey-nav"} aria-label="Explore XRF Gen2 page sections">
         <div className="journey-nav__inner">

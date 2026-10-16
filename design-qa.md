@@ -81,3 +81,18 @@ The implementation uses the official OneLaser product card order, images, labels
 - P3: re-evaluate line breaks at intermediate tablet widths after future localization or copy changes.
 
 final result: passed
+
+## XRF shared Accessories navigation QA — 2026-10-16
+
+- Source of truth: `/var/folders/vd/kws8fm5509l6b9hnywhd8yfr0000gn/T/codex-clipboard-a3c209b3-6762-46bf-a5d6-c801654741fb.png` and the current V3 Accessories-page `HomeNavigation` implementation.
+- Scope: independent XRF listing header only. The V3 homepage and Accessories page were not modified.
+- Desktop at 1440 × 1000: the header matches the Accessories-page information architecture and spacing, with `Laser Machines`, `Accessories`, `Clearance`, `Support`, `Community`, and `Contact`, plus search, cart, and account actions.
+- Desktop interaction: no mega menu is present before interaction; hovering or focusing `Accessories` opens the centered two-card panel, matching the V3 Accessories page.
+- Desktop destinations: OneLaser logo → V3 homepage; Laser Machines → V3 collections; Accessories and Laser Accessories → V3 Accessories page; Materials → the official OneLaser materials collection.
+- Menu images: both cards loaded successfully at their natural 1448 × 1086 dimensions.
+- Mobile at 390 × 844: the full-screen navigation opens below the announcement/header, locks document scrolling, exposes the same six top-level destinations, and expands Accessories to `Laser Accessories` and `Materials`.
+- Layout: document horizontal overflow is 0 px at both tested widths.
+- Console: no page-origin errors or warnings. The only warnings came from the installed browser-extension content script and are unrelated to the page.
+- Build: `npm run verify` passed after the navigation replacement and hover activation adjustment.
+
+final result: passed
