@@ -17,6 +17,7 @@ import {
   Handbag,
   Headset,
   LockKey,
+  MagnifyingGlassPlus,
   MapPin,
   Minus,
   Monitor,
@@ -1105,6 +1106,9 @@ export function XrfPage() {
     if (description) description.content = "Explore the OneLaser XRF Gen2 professional RF desktop laser, built for precision, speed and production-ready performance.";
   }, []);
   const [activeMedia, setActiveMedia] = useState(0);
+  const [heroLightboxOpen, setHeroLightboxOpen] = useState(false);
+  const heroLightboxCloseRef = useRef(null);
+  const heroMediaSwipedRef = useRef(false);
   const [activeMaterial, setActiveMaterial] = useState(0);
   const [materialPaused, setMaterialPaused] = useState(false);
   const [materialTimerEpoch, setMaterialTimerEpoch] = useState(0);
@@ -1297,6 +1301,34 @@ export function XrfPage() {
     };
   }, [youtubeVideo, videoModal]);
 
+  useEffect(() => {
+    if (!heroLightboxOpen) return undefined;
+    const previousFocus = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    heroLightboxCloseRef.current?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setHeroLightboxOpen(false);
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        event.preventDefault();
+        stepMedia(event.key === "ArrowLeft" ? -1 : 1);
+      }
+      if (event.key === "Tab") {
+        const controls = [...document.querySelectorAll(".hero-lightbox button")];
+        const first = controls[0];
+        const last = controls.at(-1);
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
+    };
+  }, [heroLightboxOpen]);
+
   const selectedPurchasePackage = useMemo(() => {
     const selected = purchasePackages.find((item) => item.id === selectedPackageId) ?? purchasePackages[0];
     const powerDelta = purchasePower === "70W" ? 1000 : 0;
@@ -1386,6 +1418,7 @@ export function XrfPage() {
   }
 
   function handleHeroMediaTouchStart(event) {
+    heroMediaSwipedRef.current = false;
     heroMediaTouchStartX.current = event.changedTouches[0]?.clientX ?? null;
   }
 
@@ -1395,6 +1428,7 @@ export function XrfPage() {
     heroMediaTouchStartX.current = null;
 
     if (startX == null || endX == null || Math.abs(endX - startX) < 44) return;
+    heroMediaSwipedRef.current = true;
     stepMedia(endX < startX ? 1 : -1);
   }
 
@@ -1547,6 +1581,13 @@ export function XrfPage() {
               onTouchCancel={() => { heroMediaTouchStartX.current = null; }}
             >
               <img src={media[activeMedia].src} alt={media[activeMedia].alt} draggable="false" />
+              <button
+                type="button"
+                className="media-stage__open"
+                aria-label={`View larger: ${media[activeMedia].alt}`}
+                aria-haspopup="dialog"
+                onClick={() => { if (!heroMediaSwipedRef.current) setHeroLightboxOpen(true); }}
+              ><span aria-hidden="true"><MagnifyingGlassPlus size={20} /></span></button>
               <span className="media-count">{String(activeMedia + 1).padStart(2, "0")} / {String(media.length).padStart(2, "0")}</span>
               <button type="button" className="media-arrow media-arrow--previous" aria-label="Previous product view" onClick={() => stepMedia(-1)}><CaretLeft size={25} /></button>
               <button type="button" className="media-arrow media-arrow--next" aria-label="Next product view" onClick={() => stepMedia(1)}><CaretRight size={25} /></button>
@@ -2239,6 +2280,18 @@ export function XrfPage() {
           <button type="button" onClick={handleAddToCart}>Add to Cart</button>
         </div>
       </div>
+
+      {heroLightboxOpen && (
+        <div className="hero-lightbox" role="dialog" aria-modal="true" aria-label="XRF Gen2 enlarged product gallery" onClick={() => setHeroLightboxOpen(false)}>
+          <div className="hero-lightbox__dialog" onClick={(event) => event.stopPropagation()} onTouchStart={handleHeroMediaTouchStart} onTouchEnd={handleHeroMediaTouchEnd} onTouchCancel={() => { heroMediaTouchStartX.current = null; }}>
+            <img src={media[activeMedia].src} alt={media[activeMedia].alt} draggable="false" />
+            <span className="hero-lightbox__count" aria-live="polite">{String(activeMedia + 1).padStart(2, "0")} / {String(media.length).padStart(2, "0")}</span>
+            <button ref={heroLightboxCloseRef} type="button" className="hero-lightbox__close" aria-label="Close enlarged product gallery" onClick={() => setHeroLightboxOpen(false)}><X size={24} /></button>
+            <button type="button" className="hero-lightbox__arrow hero-lightbox__arrow--previous" aria-label="Previous enlarged product view" onClick={() => stepMedia(-1)}><CaretLeft size={30} /></button>
+            <button type="button" className="hero-lightbox__arrow hero-lightbox__arrow--next" aria-label="Next enlarged product view" onClick={() => stepMedia(1)}><CaretRight size={30} /></button>
+          </div>
+        </div>
+      )}
 
       {videoModal && (
         <div className="video-modal" role="dialog" aria-modal="true" aria-label={`${videoModal.title} media preview`} onClick={() => setVideoModal(null)}>
