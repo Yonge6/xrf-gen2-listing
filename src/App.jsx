@@ -4,6 +4,7 @@ import {
   ArrowUpRight,
   ArrowClockwise,
   Camera,
+  CaretDown,
   CaretLeft,
   CaretRight,
   CaretUp,
@@ -2130,11 +2131,14 @@ export function XrfPage() {
               <p>Choose whether you want launch-offer updates, the complete specification sheet, or a free engraving sample.</p>
               <label>
                 <span className="sr-only">Choose what you want to receive</span>
+                <span className="decision-path__select">
                 <select name="contact[body]" defaultValue="Send me the complete XRF Gen2 specification sheet">
                   <option>Send me the complete XRF Gen2 specification sheet</option>
                   <option>Tell me about XRF Gen2 launch offers</option>
                   <option>I want to request a free engraving sample</option>
                 </select>
+                <CaretDown size={15} weight="bold" aria-hidden="true" />
+                </span>
               </label>
               <label className="decision-path__email">
                 <span className="sr-only">Email address</span>

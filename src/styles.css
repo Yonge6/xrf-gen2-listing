@@ -1028,6 +1028,10 @@ main [id] {
   padding: 0 34px 0 12px;
 }
 
+.decision-path__select { position: relative; display: block; width: 100%; }
+.decision-path__select > select { appearance: none; padding-right: 40px; }
+.decision-path__select > svg { position: absolute; top: 50%; right: 16px; transform: translateY(-50%); pointer-events: none; color: var(--muted); }
+
 .decision-path__email {
   margin-top: 8px;
   padding: 3px 3px 3px 12px;
